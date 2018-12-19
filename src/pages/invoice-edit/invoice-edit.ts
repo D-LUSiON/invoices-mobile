@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Invoice, Recipient } from '../../models';
+import { Invoice, Recipient, Provider } from '../../models';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Tools } from '../../tools';
+import { RethinkdbProvider } from '../../providers/rethinkdb/rethinkdb';
+import { RecipientsProvider } from '../../providers/recipients/recipients';
 
 /**
  * Generated class for the InvoiceEditPage page.
@@ -19,12 +21,14 @@ import { Tools } from '../../tools';
 export class InvoiceEditPage {
     invoice: Invoice = new Invoice();
     recipients: Recipient[] = [];
+    providers: Provider[] = [];
     invoice_form: FormGroup;
 
     constructor(
         public navCtrl: NavController,
         public navParams: NavParams,
         private _fb: FormBuilder,
+        private _recipientsProvider: RecipientsProvider
     ) {
         this.invoice = new Invoice(navParams.get('invoice'));
         this.initForm();
@@ -37,6 +41,7 @@ export class InvoiceEditPage {
     initForm() {
         this.invoice_form = this._fb.group({
             '_id': this._fb.control(this.invoice._id),
+            'last_segment': this._fb.control('invoice'),
             'status': this._fb.control(this.invoice.status),
             'number': this._fb.control(this.invoice.number, [Validators.required]),
             'issue_date': this._fb.control(this.invoice.issue_date || this.today, [Validators.required]),
@@ -70,9 +75,20 @@ export class InvoiceEditPage {
             }`;
     }
 
-    recipientSelect(event){
+    segmentChanged(event) {
         console.log(event);
+    }
 
+    addNewRecipient() {
+        console.log('add new recipient');
+    }
+
+    recipientSelect(event) {
+        console.log(event);
+    }
+
+    providerSelect(event) {
+        console.log(event);
     }
 
     onSubmit() {

@@ -3,7 +3,7 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>Home</ion-title>
+        <ion-title>Начало</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -13,14 +13,23 @@
             <ion-icon name="add"></ion-icon>
         </button>
     </ion-fab>
-    <ion-grid>
-        <ion-row>
-            <ion-col col-6>
-                <button ion-button outline item-center icon-start ion-button>
-                    <ion-icon name="list"></ion-icon>
-                    Invoices
-                </button>
-            </ion-col>
-        </ion-row>
-    </ion-grid>
+
+    <ion-list>
+        <ion-list-header>Фактури</ion-list-header>
+        <button ion-item>
+            <ion-icon name="alert" item-start></ion-icon>
+            Нови фактури
+            <ion-badge color="danger" item-end>0</ion-badge>
+        </button>
+        <button ion-item>
+            <ion-icon name="done-all" item-start></ion-icon>
+            Изпратени фактури
+            <ion-badge color="favorite" item-end>0</ion-badge>
+        </button>
+        <button ion-item>
+            <ion-icon name="list-box" item-start></ion-icon>
+            Общо записани фактури
+            <ion-badge color="primary" item-end>0</ion-badge>
+        </button>
+    </ion-list>
 </ion-content>

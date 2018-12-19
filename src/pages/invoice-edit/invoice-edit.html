@@ -1,13 +1,22 @@
 <ion-header>
     <ion-navbar>
         <ion-title>{{ invoice?.number ? 'Edit' : 'New' }} invoice</ion-title>
+        <ion-buttons end>
+            <button
+                ion-button
+                icon-only
+                color="favorite"
+                [disabled]="invoice_form.invalid || invoice_form.pristine"
+                (click)="onSubmit()"
+            >
+                <ion-icon name="checkbox"></ion-icon> Save
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
-
-
 <ion-content padding>
     <form [formGroup]="invoice_form" (submit)="onSubmit()">
-        <ion-segment>
+        <ion-segment formControlName="last_segment" (ionChange)="segmentChanged($event)">
             <ion-segment-button value="invoice">
                 Invoice
             </ion-segment-button>
@@ -18,42 +27,67 @@
                 Prices
             </ion-segment-button>
         </ion-segment>
-        <ion-list>
-            <ion-list-header>
-                Invoice
-            </ion-list-header>
-            <ion-item>
-                <ion-label floating>Invoice number</ion-label>
-                <ion-input type="text" formControlName="number"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label floating>Issue date</ion-label>
-                <ion-datetime formControlName="issue_date" displayFormat="DD MMM YYYY" pickerFormat="DD MMM YYYY"></ion-datetime>
-            </ion-item>
-            <ion-item>
-                <ion-label floating>Issue place</ion-label>
-                <ion-input type="text" formControlName="issue_place"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label>Recipient</ion-label>
-                <ion-select formControlName="recipient" interface="action-sheet">
-                    <ion-option value="enable">Enable</ion-option>
-                    <ion-option value="mute">Mute</ion-option>
-                    <ion-option value="mute_week">Mute for a week</ion-option>
-                    <ion-option value="mute_year" (ionSelect)="recipientSelect($event)">Mute for a year</ion-option>
-                </ion-select>
-            </ion-item>
-            <ion-item>
-                <ion-label floating>Invoice type</ion-label>
-                <ion-input type="text" formControlName="type"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-label floating>Notes</ion-label>
-                <ion-input type="text" formControlName="notes"></ion-input>
-            </ion-item>
-            <ion-list-header>
-                Provider
-            </ion-list-header>
-        </ion-list>
+        <ng-container [ngSwitch]="invoice_form.value['last_segment']">
+            <ion-list *ngSwitchCase="'invoice'">
+                <ion-item>
+                    <ion-label floating>Номер на фактура</ion-label>
+                    <ion-input type="text" formControlName="number"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Дата на издаване</ion-label>
+                    <ion-datetime formControlName="issue_date" displayFormat="DD MMM YYYY" pickerFormat="DD MMM YYYY"></ion-datetime>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Място на издаване</ion-label>
+                    <ion-input type="text" formControlName="issue_place"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label>Получател</ion-label>
+                    <ion-select formControlName="recipient" interface="action-sheet">
+                        <ion-option value="" (ionSelect)="addNewRecipient()">Нов получател</ion-option>
+                        <ion-option *ngFor="let recipient of recipients" value="{{ recipient.name }}" (ionSelect)="recipientSelect($event)">{{ recipient.name }}</ion-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Тип на стоките/услугите</ion-label>
+                    <ion-input type="text" formControlName="type"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Бележки</ion-label>
+                    <ion-input type="text" formControlName="notes"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-list *ngSwitchCase="'provider'" formGroupName="provider">
+                <ion-item>
+                    <ion-label>Изберете съществуващ доставчик:</ion-label>
+                    <ion-select interface="action-sheet">
+                        <ion-option *ngFor="let provider of providers" value="{{ provider.organization }}" (ionSelect)="providerSelect($event)">{{ provider.organization }}</ion-option>
+                    </ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Фирма</ion-label>
+                    <ion-input type="text" formControlName="organization"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>МОЛ</ion-label>
+                    <ion-input type="text" formControlName="acc_person"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>Адрес</ion-label>
+                    <ion-input type="text" formControlName="address"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>ИН по ЗДДС</ion-label>
+                    <ion-input type="text" formControlName="vat"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label floating>ИН/ЕГН</ion-label>
+                    <ion-input type="text" formControlName="vat2"></ion-input>
+                </ion-item>
+            </ion-list>
+            <ion-list *ngSwitchCase="'prices'">
+                Prices fields here...
+            </ion-list>
+        </ng-container>
     </form>
 </ion-content>
