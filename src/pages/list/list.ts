@@ -42,4 +42,10 @@ export class ListPage {
             item: null
         });
     }
+
+    itemTapped(event, item) {
+        this.navCtrl.push(InvoiceEditPage, {
+            item: item
+        });
+    }
 }
